@@ -48,3 +48,23 @@ function addCharactersToDom(characterArray) {
         character.createCharacterCard()
     }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("DOMLoaded")
+    getCharacters();
+    formSubmit.addEventListener("click", function() {
+        event.preventDefault();
+        addCharacter();
+    })
+    addCharacterButton.addEventListener("click", function() {
+        toggleForm();
+        toggleButtons();
+    })
+    dropDownButton.addEventListener("click", function() {
+        toggleDropDown();
+        toggleButtons();
+    })
+    laneDropDown.addEventListener("change", function() {
+        getRandomCharacterByLane();
+    })
+}
