@@ -2,22 +2,20 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>League Generator</title>
-        <link rel="stylesheet" href="main.css">
-        <script src ="src/index.js"></script>
+        <link rel="stylesheet" href="style/style.css">
     </head>
     <body>
-        <div class="character-container">
+        <div class="container">
             <h1 id="main-title">League Generator</h1>
-            <div id="buttons">
+            <div id="form-show-buttons">
                 <button class="button" id="add-character" type="button" name="button">Add A Champion</button>
                 <span id="or"> or</span>
                 <button class="button" id="filter-button" type="button" name="button">View Champion By Lane</button>
             </div>
 
             <div id="filter-drop-down" class="hidden">
-                <h3>Get A Random Chamapion And Lane</h3>
+                <h3>Get A Random Chamapion By Lane</h3>
                 <select id="filter-dropdown">
 
                 </select>
@@ -33,12 +31,13 @@
                     <select name="filter-dropdown" id="filter-dropdown">
 
                     </select>
+                    <input id="form-submit" type="submit" value="Add Character">
                 </form>
             </div>
             <div id="character-card-container">
 
             </div>
-
+        </div>
         <script type="application/javascript" src="src/index.js" charset="utf-8" ></script>
     </body>
 </html>

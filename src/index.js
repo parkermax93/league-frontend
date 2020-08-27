@@ -45,7 +45,7 @@ function createCharacters(characters) {
     const characterArray = []
     for (character of characters) {
         let laneArray = [];
-        for (lane of character.attributes.lane) {
+        for (lane of character.attributes.lane_id) {
             laneArray.push(lane.name)
         }
         laneArray.push(new Character(character.attributes.name, character.attributes.image_link, character.attributes.lane_id ))
@@ -74,9 +74,9 @@ document.addEventListener("DOMContentLoaded", function() {
         toggleDropDown();
         toggleButtons();
     })
-    laneDropDown.addEventListener("change", function() {
-        getRandomCharacterByLane();
-    })
+    // laneDropDown.addEventListener("change", function() {
+    //     getRandomCharacterByLane();
+    // })
 })
 
 function toggleForm() {
@@ -95,7 +95,7 @@ function clearCharacters() {
 function toggleDropDown() {
     const dropDown = document.getElementById("filter-drop-down")
     if (dropDown.classList.contains("hidden")) {
-        drownDown.classList.remove("hidden");
+        dropDown.classList.remove("hidden");
     } else {
         dropDown.ClassName += " hidden"
     }
@@ -126,7 +126,6 @@ function toggleButtons() {
 
 function addCharacter() {
     const form = event.target.parentElement 
-    const lane = form[3].value.split(', ')
     const character = new Character(form[0].value, form[1].value, form[2].value)
     const configurationObject = {
         method: "POST",
@@ -146,6 +145,7 @@ function addCharacter() {
         character.createCharacterCard();
         toggleButtons();
         toggleForm();
+        debugger
     })
     .catch(error => console.log("Error: " + error))
 }
