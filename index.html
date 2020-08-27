@@ -1,18 +1,44 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>League Generator</title>
         <link rel="stylesheet" href="main.css">
+        <script src ="src/index.js"></script>
     </head>
     <body>
-        <h1>League Stuff!</h1>
+        <div class="character-container">
+            <h1 id="main-title">League Generator</h1>
+            <div id="buttons">
+                <button class="button" id="add-character" type="button" name="button">Add A Champion</button>
+                <span id="or"> or</span>
+                <button class="button" id="filter-button" type="button" name="button">View Champion By Lane</button>
+            </div>
+
+            <div id="filter-drop-down" class="hidden">
+                <h3>Get A Random Chamapion And Lane</h3>
+                <select id="filter-dropdown">
+                    <option value="" disabled selected>Select Your Lane</option>
+                </select>
+            </div>
+
+            <div class="form">
+                <form id="new-character-form" class="hidden">
+                    <label for="character-name">Name:</label><br>
+                    <input type="text" name="character-name"><br>
+                    <label for="image-link">Image Link:</label><br>
+                    <label type="text" name="image-link"></label>
+                    <label for="lane-id">Lane:</label>
+                    <select name="lane-id" id="lane-id">
+                        <option value="Top">Top</option>
+                        <option value="Jungle">Jungle</option>
+                        <option value="Mid">Mid</option>
+                        <option value="ADC">ADC</option>
+                        <option value="Support">Support</option>
+                    </select>
+                </form>
+            </div>
 
         <script src="src/index.js" ></script>
     </body>
