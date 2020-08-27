@@ -1,4 +1,4 @@
-const LEAGUE_URL = "http://localhost:3000/"
+const CHARACTERS_URL = "http://localhost:3000/characters"
 
 class Character {
     constructor(name, imageLink, laneID)
