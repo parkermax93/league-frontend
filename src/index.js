@@ -8,14 +8,16 @@ const laneDropDown = document.getElementById("filter-dropdown")
 const cardContainer = document.getElementById('character-card-container')
 
 class Character {
-    constructor(name, imageLink, laneId) {
+    constructor({name, imageLink, laneId}) {
     this.name = name; 
     this.imageLink = imageLink;
     this.laneId = laneId;
+    Character.all.push(this)
     }
+    static all = []
 
     createCharacterCard() {
-        const card = document.CreateElement('div')
+        const card = document.createElement('div')
         card.className = "card"
         const img = document.createElement('img')
         img.src = this.imageLink
@@ -25,13 +27,6 @@ class Character {
         const name = document.createElement('h1')
         name.innerHTML = this.name 
         cardInfo.appendChild(name)
-        const ul = document.createElement('ul')
-        for (lane of this.laneId) {
-            let li = document.createElement('li')
-            li.innerHTML = lane 
-            ul.appendChild(li)
-        }
-        cardInfo.appendChild(ul)
         card.appendChild(cardInfo)
         cardContainer.appendChild(card)
     }
@@ -42,15 +37,17 @@ function getCharacters() {
 }
 
 function createCharacters(characters) {
-    const characterArray = []
-    for (character of characters) {
-        let laneArray = [];
-        for (lane of character.attributes.lane_id) {
-            laneArray.push(lane.name)
-        }
-        laneArray.push(new Character(character.attributes.name, character.attributes.image_link, character.attributes.lane_id ))
-    }
-    return addCharactersToDom(characterArray)
+    characters.forEach(character => new Character({...character.attributes}))
+    Character.all.forEach(c => c.createCharacterCard())
+    // const characterArray = []
+    // for (character of characters) {
+    //     // let laneArray = [];
+    //     // for (lane of character.attributes.lane_id) {
+    //     //     laneArray.push(lane.)
+    //     // }
+    //     // laneArray.push(new Character(character.attributes.name, character.attributes.image_link, character.attributes.lane_id ))
+    // }
+    // return addCharactersToDom(characterArray)
 }
 
 function addCharactersToDom(characterArray) {
@@ -64,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
     getCharacters();
     formSubmit.addEventListener("click", function() {
         event.preventDefault();
+        console.log("clicked")
         addCharacter();
     })
     addCharacterButton.addEventListener("click", function() {
@@ -74,9 +72,9 @@ document.addEventListener("DOMContentLoaded", function() {
         toggleDropDown();
         toggleButtons();
     })
-    // laneDropDown.addEventListener("change", function() {
-    //     getRandomCharacterByLane();
-    // })
+    laneDropDown.addEventListener("change", function() {
+        getRandomCharacterByLane();
+    })
 })
 
 function toggleForm() {
@@ -101,6 +99,16 @@ function toggleDropDown() {
     }
     getLanes();
 }
+
+// function toggleDropDown() {
+//     const dropDown = document.getElementById("filter-drop-down")
+//     if (dropDown.classList.contains("hidden")) {
+//         dropDown.classList.remove("hidden");
+//     } else {
+//         dropDown.ClassName += " hidden"
+//     }
+//     getLanes();
+// }
 
 function getLanes() {
     fetch(LANES_URL).then(response => response.json()).then(json => populateLaneDropDown(json.data))
@@ -145,7 +153,6 @@ function addCharacter() {
         character.createCharacterCard();
         toggleButtons();
         toggleForm();
-        debugger
     })
     .catch(error => console.log("Error: " + error))
 }
