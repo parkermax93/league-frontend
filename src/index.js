@@ -156,3 +156,19 @@ function addCharacter() {
     })
     .catch(error => console.log("Error: " + error))
 }
+
+function getRandomCharacterByLane() {
+    clearCharacters();
+    const lane = event.target.value
+    console.log(lane)
+    fetch(LANES_URL).then(reponse => response.json()).then(json => loadRandomCharacter(json.data.attributes))
+}
+
+function loadRandomCharacter(character) {
+    let laneArray = [];
+    for (lane of lane) {
+        laneArray.push(lane.name)
+    }
+    const champ = new Character(character.name, character.image_link, character.lane_id)
+    champ.createCharacterCard();
+}
