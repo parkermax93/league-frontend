@@ -3,15 +3,16 @@ const LANES_URL = "http://localhost:3000/lanes"
 const formSubmit = document.getElementById("form-submit")
 const formButtons = document.getElementById("form-show-buttons")
 const addCharacterButton = document.getElementById("add-character")
+const addCharacterLaneDropdown = document.getElementById("filter-adddropdown")
 const dropDownButton = document.getElementById("filter-button")
 const laneDropDown = document.getElementById("filter-dropdown")
 const cardContainer = document.getElementById('character-card-container')
 
 class Character {
-    constructor({name, imageLink, laneId}) {
+    constructor({name, image_link, lane_id}) {
     this.name = name; 
-    this.imageLink = imageLink;
-    this.laneId = laneId;
+    this.image_link = image_link;
+    this.lane_id = lane_id;
     Character.all.push(this)
     }
     static all = []
@@ -20,7 +21,7 @@ class Character {
         const card = document.createElement('div')
         card.className = "card"
         const img = document.createElement('img')
-        img.src = this.imageLink
+        img.src = this.image_link
         card.appendChild(img)
         const cardInfo = document.createElement('div')
         cardInfo.className = "card-info"
@@ -66,6 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     addCharacterButton.addEventListener("click", function() {
         toggleForm();
+        toggleAddDropDown();
         toggleButtons();
     })
     dropDownButton.addEventListener("click", function() {
@@ -97,30 +99,30 @@ function toggleDropDown() {
     } else {
         dropDown.ClassName += " hidden"
     }
-    getLanes();
+    getLanes(laneDropDown);
 }
 
-// function toggleDropDown() {
-//     const dropDown = document.getElementById("filter-drop-down")
-//     if (dropDown.classList.contains("hidden")) {
-//         dropDown.classList.remove("hidden");
-//     } else {
-//         dropDown.ClassName += " hidden"
-//     }
-//     getLanes();
-// }
-
-function getLanes() {
-    fetch(LANES_URL).then(response => response.json()).then(json => populateLaneDropDown(json.data))
+function toggleAddDropDown() {
+    // const dropDown = document.getElementById("new-character-form")
+    // if (dropDown.classList.contains("hidden")) {
+    //     dropDown.classList.remove("hidden");
+    // } else {
+    //     dropDown.ClassName += " hidden"
+    // }
+    getLanes(addCharacterLaneDropdown);
 }
 
-function populateLaneDropDown(data) {
+function getLanes(selectElement) {
+    fetch(LANES_URL).then(response => response.json()).then(json => populateLaneDropDown(json.data, selectElement))
+}
+
+function populateLaneDropDown(data, selectElement) {
     console.log(data)
     for (lane of data) {
         let option = document.createElement("option")
-        option.value = lane.attributes.name
+        option.value = lane.id
         option.innerHTML = lane.attributes.name
-        laneDropDown.appendChild(option)
+        selectElement.appendChild(option)
     }
 }
 
@@ -134,18 +136,19 @@ function toggleButtons() {
 
 function addCharacter() {
     const form = event.target.parentElement 
-    const character = new Character(form[0].value, form[1].value, form[2].value)
+    const characterAttributes = {
+        "name": form[0].value,
+        "image_link": form[1].value,
+        "lane_id": form[2].value,
+    };
+    const character = new Character(characterAttributes)
     const configurationObject = {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
         },
-        body: JSON.stringify({
-            "name": form[0].value,
-            "image_link": form[1].value,
-            "lane_id": form[2].value,
-        })
+        body: JSON.stringify(characterAttributes)
     };
     fetch(CHARACTERS_URL, configurationObject)
     .then(response => response.json())
@@ -161,14 +164,19 @@ function getRandomCharacterByLane() {
     clearCharacters();
     const lane = event.target.value
     console.log(lane)
-    fetch(LANES_URL).then(reponse => response.json()).then(json => loadRandomCharacter(json.data.attributes))
+    fetch(CHARACTERS_URL).then(response => response.json()).then(json => loadCharactersForLane(json.data, lane))
+    // .attributes can't be called on an array
 }
 
-function loadRandomCharacter(character) {
-    let laneArray = [];
-    for (lane of lane) {
-        laneArray.push(lane.name)
+function loadCharactersForLane(characters, lane_id) {
+    debugger
+    let charactersInLane = [];
+    for (character of characters) {
+        if (character.attributes.lane_id == lane_id) {
+            charactersInLane.push(character)
+        }
     }
-    const champ = new Character(character.name, character.image_link, character.lane_id)
-    champ.createCharacterCard();
+    charactersInLane.forEach(c => new Character({...c.attributes}).createCharacterCard());
+    // const champ = new Character(character.name, character.image_link, character.lane_id)
+    // champ.createCharacterCard();
 }
