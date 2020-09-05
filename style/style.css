@@ -33,11 +33,14 @@
     transition: 0.3s;
     width: 32%;
     margin-top: 20px;
+    border: 6px solid #FB2;
+    background: #c3c5d3;
 }
 
 .card-info h1 {
     text-align: center;
     text-shadow: 1px 1px #921dc9;
+    background: #c3c5d3;
 }
 
 .card img {
@@ -48,6 +51,7 @@
     display: flex;
     flex-flow: row wrap;
     justify-content: space-around;
+    
 }
 
 .form {
@@ -80,4 +84,12 @@ input[type=submit] {
 
   #filter-dropdown {
     background-color: rgb(131, 182, 178);
+  }
+
+  body {
+      background-image: url("https://miro.medium.com/max/3200/1*nb1P8J-TXW8D-7yqznrDXw.jpeg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: 100%;
   }

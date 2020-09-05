@@ -1,5 +1,7 @@
-const CHARACTERS_URL = "http://localhost:3000/characters"
-const LANES_URL = "http://localhost:3000/lanes"
+// const CHARACTERS_URL = "http://localhost:3000/characters"
+const characterApiConnection = new CharacterApiConnection
+// const LANES_URL = "http://localhost:3000/lanes"
+const laneApiConnection = new LaneApiConnection
 const formSubmit = document.getElementById("form-submit")
 const formButtons = document.getElementById("form-show-buttons")
 const addCharacterButton = document.getElementById("add-character")
@@ -8,62 +10,48 @@ const dropDownButton = document.getElementById("filter-button")
 const laneDropDown = document.getElementById("filter-dropdown")
 const cardContainer = document.getElementById('character-card-container')
 
-class Character {
-    constructor({name, image_link, lane_id}) {
-    this.name = name; 
-    this.image_link = image_link;
-    this.lane_id = lane_id;
-    Character.all.push(this)
-    }
-    static all = []
+// class Character {
 
-    createCharacterCard() {
-        const card = document.createElement('div')
-        card.className = "card"
-        const img = document.createElement('img')
-        img.src = this.image_link
-        card.appendChild(img)
-        const cardInfo = document.createElement('div')
-        cardInfo.className = "card-info"
-        const name = document.createElement('h1')
-        name.innerHTML = this.name 
-        cardInfo.appendChild(name)
-        card.appendChild(cardInfo)
-        cardContainer.appendChild(card)
-    }
-}
+//     constructor({name, image_link, lane_id}) {
+//     this.name = name; 
+//     this.image_link = image_link;
+//     this.lane_id = lane_id;
+//     Character.all.push(this)
+//     }
+//     static all = []
 
-function getCharacters() {
-    fetch(CHARACTERS_URL).then(response => response.json()).then(json => createCharacters(json.data))
-}
+//     createCharacterCard() {
+//         const card = document.createElement('div')
+//         card.className = "card"
+//         const img = document.createElement('img')
+//         img.src = this.image_link
+//         card.appendChild(img)
+//         const cardInfo = document.createElement('div')
+//         cardInfo.className = "card-info"
+//         const name = document.createElement('h1')
+//         name.innerHTML = this.name 
+//         cardInfo.appendChild(name)
+//         card.appendChild(cardInfo)
+//         cardContainer.appendChild(card)
+//     }
+// }
+
+// function getCharacters() {
+//     fetch(CHARACTERS_URL).then(response => response.json()).then(json => createCharacters(json.data))
+// }
 
 function createCharacters(characters) {
     characters.forEach(character => new Character({...character.attributes}))
     Character.all.forEach(c => c.createCharacterCard())
-    // const characterArray = []
-    // for (character of characters) {
-    //     // let laneArray = [];
-    //     // for (lane of character.attributes.lane_id) {
-    //     //     laneArray.push(lane.)
-    //     // }
-    //     // laneArray.push(new Character(character.attributes.name, character.attributes.image_link, character.attributes.lane_id ))
-    // }
-    // return addCharactersToDom(characterArray)
-}
-
-function addCharactersToDom(characterArray) {
-    for (character of characterArray) {
-        character.createCharacterCard()
-    }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
     console.log("DOMLoaded")
-    getCharacters();
+    characterApiConnection.getCharacters();
     formSubmit.addEventListener("click", function() {
         event.preventDefault();
         console.log("clicked")
-        addCharacter();
+        characterApiConnection.addCharacter();
     })
     addCharacterButton.addEventListener("click", function() {
         toggleForm();
@@ -75,9 +63,13 @@ document.addEventListener("DOMContentLoaded", function() {
         toggleButtons();
     })
     laneDropDown.addEventListener("change", function() {
-        getRandomCharacterByLane();
+        characterApiConnection.getCharacterByLane();
     })
 })
+
+// function preventDefault() {
+//     laneDropDown.preventDefault();
+// }
 
 function toggleForm() {
     const form = formSubmit.parentElement;
@@ -99,22 +91,16 @@ function toggleDropDown() {
     } else {
         dropDown.ClassName += " hidden"
     }
-    getLanes(laneDropDown);
+    laneApiConnection.getLanes(laneDropDown);
 }
 
 function toggleAddDropDown() {
-    // const dropDown = document.getElementById("new-character-form")
-    // if (dropDown.classList.contains("hidden")) {
-    //     dropDown.classList.remove("hidden");
-    // } else {
-    //     dropDown.ClassName += " hidden"
-    // }
-    getLanes(addCharacterLaneDropdown);
+    laneApiConnection.getLanes(addCharacterLaneDropdown);
 }
 
-function getLanes(selectElement) {
-    fetch(LANES_URL).then(response => response.json()).then(json => populateLaneDropDown(json.data, selectElement))
-}
+// function getLanes(selectElement) {
+//     fetch(LANES_URL).then(response => response.json()).then(json => populateLaneDropDown(json.data, selectElement))
+// }
 
 function populateLaneDropDown(data, selectElement) {
     console.log(data)
@@ -134,42 +120,41 @@ function toggleButtons() {
     }
 }
 
-function addCharacter() {
-    const form = event.target.parentElement 
-    const characterAttributes = {
-        "name": form[0].value,
-        "image_link": form[1].value,
-        "lane_id": form[2].value,
-    };
-    const character = new Character(characterAttributes)
-    const configurationObject = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        },
-        body: JSON.stringify(characterAttributes)
-    };
-    fetch(CHARACTERS_URL, configurationObject)
-    .then(response => response.json())
-    .then(function(json) {
-        character.createCharacterCard();
-        toggleButtons();
-        toggleForm();
-    })
-    .catch(error => console.log("Error: " + error))
-}
+// function addCharacter() {
+//     const form = event.target.parentElement 
+//     const characterAttributes = {
+//         "name": form[0].value,
+//         "image_link": form[1].value,
+//         "lane_id": form[2].value,
+//     };
+//     const character = new Character(characterAttributes)
+//     const configurationObject = {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/json",
+//             "Accept": "application/json"
+//         },
+//         body: JSON.stringify(characterAttributes)
+//     };
+//     fetch(CHARACTERS_URL, configurationObject)
+//     .then(response => response.json())
+//     .then(function(json) {
+//         character.createCharacterCard();
+//         toggleButtons();
+//         toggleForm();
+//     })
+//     .catch(error => console.log("Error: " + error))
+// }
 
-function getRandomCharacterByLane() {
-    clearCharacters();
-    const lane = event.target.value
-    console.log(lane)
-    fetch(CHARACTERS_URL).then(response => response.json()).then(json => loadCharactersForLane(json.data, lane))
-    // .attributes can't be called on an array
-}
+// function getCharacterByLane() {
+//     clearCharacters();
+//     const lane = event.target.value
+//     console.log(lane)
+//     fetch(CHARACTERS_URL).then(response => response.json()).then(json => loadCharactersForLane(json.data, lane))
+//     // .attributes can't be called on an array
+// }
 
 function loadCharactersForLane(characters, lane_id) {
-    debugger
     let charactersInLane = [];
     for (character of characters) {
         if (character.attributes.lane_id == lane_id) {
@@ -177,6 +162,4 @@ function loadCharactersForLane(characters, lane_id) {
         }
     }
     charactersInLane.forEach(c => new Character({...c.attributes}).createCharacterCard());
-    // const champ = new Character(character.name, character.image_link, character.lane_id)
-    // champ.createCharacterCard();
 }
